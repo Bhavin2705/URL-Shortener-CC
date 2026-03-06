@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+
+  body {
+    @apply bg-surface-950 text-surface-100 font-body;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(108,99,255,0.12) 0%, transparent 70%),
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    min-height: 100vh;
+  }
+
+  ::selection { @apply bg-brand-500/30 text-white; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { @apply bg-surface-900; }
+  ::-webkit-scrollbar-thumb { @apply bg-surface-600 rounded-full; }
+}
+
+@layer components {
+  /* ── Buttons ── */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 font-display font-semibold
+           text-sm rounded-xl px-5 py-2.5 transition-all duration-200
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400
+           disabled:opacity-40 disabled:cursor-not-allowed select-none cursor-pointer;
+  }
+  .btn-brand {
+    @apply btn bg-brand-500 text-white hover:bg-brand-600 active:scale-[0.98]
+           shadow-glow-sm hover:shadow-glow;
+  }
+  .btn-ghost {
+    @apply btn bg-surface-800/60 text-surface-200 border border-surface-700
+           hover:bg-surface-700 hover:border-surface-600 active:scale-[0.98]
+           backdrop-blur-sm;
+  }
+  .btn-danger {
+    @apply btn bg-rose-500/10 text-rose-400 border border-rose-500/20
+           hover:bg-rose-500/20 hover:border-rose-500/40 active:scale-[0.98];
+  }
+  .btn-icon {
+    @apply inline-flex items-center justify-center w-9 h-9 rounded-lg
+           bg-surface-800/60 border border-surface-700 text-surface-400
+           hover:bg-surface-700 hover:text-surface-200 hover:border-surface-600
+           transition-all duration-150 cursor-pointer;
+  }
+
+  /* ── Cards ── */
+  .card {
+    @apply bg-surface-900/80 border border-surface-800 rounded-2xl
+           shadow-card backdrop-blur-sm;
+  }
+  .card-hover {
+    @apply card hover:border-surface-700 hover:shadow-card-hover
+           hover:-translate-y-0.5 transition-all duration-200;
+  }
+
+  /* ── Inputs ── */
+  .input {
+    @apply w-full bg-surface-800/50 border border-surface-700 rounded-xl
+           px-4 py-3 text-surface-100 font-body text-sm
+           placeholder:text-surface-500
+           focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30
+           transition-all duration-150;
+  }
+  .label {
+    @apply block text-xs font-display font-semibold text-surface-400 mb-1.5 uppercase tracking-wider;
+  }
+
+  /* ── Badges ── */
+  .badge {
+    @apply inline-flex items-center gap-1 text-xs font-display font-semibold
+           px-2.5 py-1 rounded-full border;
+  }
+  .badge-brand  { @apply badge bg-brand-500/15 text-brand-400 border-brand-500/25; }
+  .badge-green  { @apply badge bg-emerald-500/15 text-emerald-400 border-emerald-500/25; }
+  .badge-red    { @apply badge bg-rose-500/15 text-rose-400 border-rose-500/25; }
+  .badge-amber  { @apply badge bg-amber-400/15 text-amber-400 border-amber-400/25; }
+
+  /* ── Divider ── */
+  .divider { @apply border-t border-surface-800 my-6; }
+
+  /* ── Stat box ── */
+  .stat-box {
+    @apply card p-5 flex flex-col gap-1;
+  }
+
+  /* ── Animated underline link ── */
+  .link-animated {
+    @apply relative text-brand-400 hover:text-brand-300 transition-colors;
+  }
+  .link-animated::after {
+    content: '';
+    @apply absolute left-0 bottom-0 w-0 h-px bg-brand-400 transition-all duration-300;
+  }
+  .link-animated:hover::after { @apply w-full; }
+}
+
+/* Page transition utility */
+.page-enter { @apply opacity-0 translate-y-3; }
+.page-enter-active { @apply opacity-100 translate-y-0 transition-all duration-400; }
