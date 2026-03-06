@@ -1,4 +1,4 @@
-﻿# SN!P - URL Shortener v2
+﻿# SN!P - URL Shortener 
 
 Full-stack Bitly-style URL shortener with JWT authentication, per-user dashboards, QR codes, and analytics.
 
