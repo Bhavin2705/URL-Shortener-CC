@@ -7,6 +7,7 @@ import rateLimit from 'express-rate-limit';
 import authRoutes from './routes/authRoutes';
 import urlRoutes, { redirectRouter } from './routes/urlRoutes';
 import statsRoutes from './routes/statsRoutes';
+import adminRoutes from './routes/adminRoutes';
 import { errorHandler } from './middleware/errorHandler';
 
 const app = express();
@@ -25,6 +26,7 @@ app.use('/api', limiter);
 app.use('/api/auth', authRoutes);
 app.use('/api', urlRoutes);
 app.use('/api', statsRoutes);
+app.use('/api/admin', adminRoutes);
 app.use('/', redirectRouter);
 
 app.use(errorHandler);

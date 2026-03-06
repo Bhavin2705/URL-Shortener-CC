@@ -1,7 +1,15 @@
+# Dependencies
 node_modules/
-dist/
+
+# Build outputs - MAKE SURE THESE ARE THERE
+backend/dist/
+frontend/dist/
 build/
+
+# Environment files
 .env
+.env.local
+
 *.log
 .DS_Store
 .vscode/

@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+﻿import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToastContext } from '../components/ui/Layout';
@@ -10,6 +10,7 @@ export default function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -19,7 +20,7 @@ export default function Register() {
     setLoading(true); setError('');
     try {
       await register(name, email, password);
-      show('Account created! Welcome to Snip 🎉', 'success');
+      show('Account created! Welcome to Snip!', 'success');
       navigate('/dashboard');
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { error?: string } } }).response?.data?.error ?? 'Registration failed';
@@ -42,7 +43,7 @@ export default function Register() {
                 <path d="M10.5 5.5L5.5 10.5M5.5 5.5h5v5" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </div>
-            <h1 className="font-display font-bold text-2xl text-white">Create your account</h1>
+            <h1 className="font-display font-bold text-2xl text-surface-100">Create your account</h1>
             <p className="text-surface-500 text-sm mt-1">Start shortening links for free</p>
           </div>
 
@@ -61,7 +62,37 @@ export default function Register() {
             </div>
             <div>
               <label className="label">Password</label>
-              <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Min. 6 characters" required minLength={6} className="input" />
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  placeholder="Min. 6 characters"
+                  required
+                  minLength={6}
+                  className="input pr-11"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((v) => !v)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 btn-icon w-8 h-8"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  title={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? (
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <path d="M3 3l18 18" strokeWidth="2" strokeLinecap="round" />
+                      <path d="M10.58 10.58a2 2 0 102.83 2.83" strokeWidth="2" strokeLinecap="round" />
+                      <path d="M9.88 5.09A10.94 10.94 0 0112 5c5 0 9.27 3.11 11 7-1 2.24-2.71 4.08-4.88 5.26M6.61 6.61C4.62 7.9 3.1 9.78 2 12c1.73 3.89 6 7 10 7 1.24 0 2.44-.19 3.56-.54" strokeWidth="2" strokeLinecap="round" />
+                    </svg>
+                  ) : (
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" strokeWidth="2" />
+                      <circle cx="12" cy="12" r="3" strokeWidth="2" />
+                    </svg>
+                  )}
+                </button>
+              </div>
             </div>
             <button type="submit" disabled={loading} className="btn-brand w-full h-11 text-base mt-2">
               {loading ? (
@@ -79,3 +110,4 @@ export default function Register() {
     </div>
   );
 }
+

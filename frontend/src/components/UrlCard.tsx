@@ -2,9 +2,13 @@ import { Link } from 'react-router-dom';
 import type { UrlRecord } from '../types/url';
 import CopyButton from './CopyButton';
 
-interface Props { url: UrlRecord; onDelete: (code: string) => void }
+interface Props {
+  url: UrlRecord;
+  onDelete: (code: string) => void;
+  onReroute?: (code: string, currentUrl: string) => void;
+}
 
-export default function UrlCard({ url, onDelete }: Props) {
+export default function UrlCard({ url, onDelete, onReroute }: Props) {
   const expired = url.expiresAt ? new Date(url.expiresAt) < new Date() : false;
   const domain = (() => { try { return new URL(url.originalUrl).hostname; } catch { return url.originalUrl.slice(0, 30); } })();
 
@@ -61,7 +65,7 @@ export default function UrlCard({ url, onDelete }: Props) {
         <div className="shrink-0 flex flex-col items-end gap-3">
           {/* Click count */}
           <div className="text-right">
-            <p className="font-display font-bold text-2xl text-white leading-none">
+            <p className="font-display font-bold text-2xl text-surface-100 leading-none">
               {url.clicks.toLocaleString()}
             </p>
             <p className="text-surface-500 text-xs font-display mt-0.5">clicks</p>
@@ -70,6 +74,15 @@ export default function UrlCard({ url, onDelete }: Props) {
           {/* Actions */}
           <div className="flex items-center gap-1.5">
             <CopyButton text={url.shortUrl} compact />
+            <button
+              onClick={() => onReroute?.(url.shortCode, url.originalUrl)}
+              className="btn-icon"
+              title="Change destination URL"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 4H6a2 2 0 00-2 2v5m11 9h5a2 2 0 002-2v-5m-6-6 5 5m0 0-5 5m5-5H9" />
+              </svg>
+            </button>
             <Link to={`/analytics/${url.shortCode}`} className="btn-icon" title="View analytics">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>

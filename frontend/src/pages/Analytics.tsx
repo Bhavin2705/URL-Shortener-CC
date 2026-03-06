@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { fetchStats } from '../services/api';
 import type { UrlRecord } from '../types/url';
@@ -31,7 +31,7 @@ export default function Analytics() {
       <div className="max-w-lg mx-auto px-4 py-20 text-center">
         <p className="font-display font-bold text-5xl text-surface-700 mb-4">404</p>
         <p className="text-surface-500 mb-8">{error || 'Link not found'}</p>
-        <Link to="/dashboard" className="btn-brand">← Back to dashboard</Link>
+        <Link to="/dashboard" className="btn-brand">{'<-'} Back to dashboard</Link>
       </div>
     );
 
@@ -45,7 +45,7 @@ export default function Analytics() {
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7"/></svg>
           Dashboard
         </Link>
-        <h1 className="font-display font-bold text-3xl text-white">Link Analytics</h1>
+        <h1 className="font-display font-bold text-3xl text-surface-100">Link Analytics</h1>
         <p className="text-surface-500 text-sm mt-1 font-mono">/{data.shortCode}</p>
       </div>
 
@@ -124,3 +124,4 @@ export default function Analytics() {
     </div>
   );
 }
+

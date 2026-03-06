@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { shortenUrl, type ShortenPayload } from '../services/api';
@@ -9,10 +9,10 @@ import QRCodeDisplay from '../components/QRCodeDisplay';
 import { useToastContext } from '../components/ui/Layout';
 
 const features = [
-  { icon: '⚡', title: 'Instant shortening', desc: 'Generate short links in milliseconds' },
-  { icon: '📊', title: 'Click analytics', desc: 'Track every click with detailed stats' },
-  { icon: '🔒', title: 'Private dashboard', desc: 'Your links, visible only to you' },
-  { icon: '⏰', title: 'Link expiration', desc: 'Set custom expiry dates on any link' },
+  { icon: 'FAST', title: 'Instant shortening', desc: 'Generate short links in milliseconds' },
+  { icon: 'DATA', title: 'Click analytics', desc: 'Track every click with detailed stats' },
+  { icon: 'SAFE', title: 'Private dashboard', desc: 'Your links, visible only to you' },
+  { icon: 'TIME', title: 'Link expiration', desc: 'Set custom expiry dates on any link' },
 ];
 
 export default function Home() {
@@ -24,12 +24,11 @@ export default function Home() {
   const [error, setError] = useState('');
 
   const handleSubmit = async (payload: ShortenPayload) => {
-    if (!user) { show('Please sign in to create links', 'error'); return; }
     setLoading(true); setError(''); setResult(null); setShowQR(false);
     try {
       const data = await shortenUrl(payload);
       setResult(data);
-      show('Link created!', 'success');
+      show(user ? 'Link created!' : 'Link created. Sign in to track clicks and manage links.', 'success');
     } catch (e: unknown) {
       const msg = (e as { response?: { data?: { error?: string } } }).response?.data?.error ?? 'Something went wrong';
       setError(msg);
@@ -49,30 +48,31 @@ export default function Home() {
         <div className="text-center mb-12 animate-fade-up">
           <div className="inline-flex items-center gap-2 badge-brand mb-6 text-xs px-3 py-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-brand-400 animate-pulse" />
-            Free · Secure · Instant
+            Free - Secure - Instant
           </div>
-          <h1 className="font-display font-black text-5xl sm:text-6xl lg:text-7xl text-white leading-[0.95] tracking-tight mb-6">
+          <h1 className="font-display font-black text-5xl sm:text-6xl lg:text-7xl text-surface-100 leading-[0.95] tracking-tight mb-6">
             Short links that<br />
             <span className="bg-gradient-brand bg-clip-text text-transparent">
               mean business
             </span>
           </h1>
           <p className="text-surface-400 text-lg sm:text-xl max-w-xl mx-auto leading-relaxed">
-            Create, track, and manage short URLs with powerful analytics. Built for developers and teams.
+            {user
+              ? 'Create, track, and manage short URLs with powerful analytics. Built for developers and teams.'
+              : 'Create short URLs instantly. Sign in to unlock click analytics and dashboard management.'}
           </p>
         </div>
 
         {/* Form card */}
         <div className="animate-fade-up [animation-delay:150ms] opacity-0 [animation-fill-mode:forwards]">
           <div className="card p-6 shadow-glow-sm">
-            {user ? (
-              <UrlForm onSubmit={handleSubmit} loading={loading} />
-            ) : (
-              <div className="text-center py-4">
-                <p className="text-surface-400 mb-4">Sign in to start creating short links</p>
-                <div className="flex items-center justify-center gap-3">
-                  <Link to="/login" className="btn-ghost">Sign in</Link>
-                  <Link to="/register" className="btn-brand">Get started free</Link>
+            <UrlForm onSubmit={handleSubmit} loading={loading} />
+            {!user && (
+              <div className="mt-4 rounded-xl border border-amber-400/20 bg-amber-400/5 px-4 py-3 text-sm text-surface-500">
+                Guest mode: link creation works, but click analytics and dashboard management require an account.
+                <div className="mt-2 flex items-center gap-3">
+                  <Link to="/login" className="link-animated">Sign in</Link>
+                  <Link to="/register" className="link-animated">Create account</Link>
                 </div>
               </div>
             )}
@@ -82,7 +82,7 @@ export default function Home() {
         {/* Error */}
         {error && (
           <div className="mt-4 px-4 py-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-sm animate-fade-in">
-            ⚠ {error}
+            ! {error}
           </div>
         )}
 
@@ -117,6 +117,12 @@ export default function Home() {
                 <QRCodeDisplay url={result.shortUrl} />
               </div>
             )}
+
+            {!user && (
+              <div className="mt-4 rounded-xl border border-amber-400/20 bg-amber-400/5 px-4 py-3 text-sm text-surface-500">
+                You are in guest mode. Save this short URL now. Analytics and link history are available after sign in.
+              </div>
+            )}
           </div>
         )}
 
@@ -138,3 +144,4 @@ export default function Home() {
     </div>
   );
 }
+

@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+﻿import { useState, type FormEvent } from 'react';
 import type { ShortenPayload } from '../services/api';
 
 interface Props { onSubmit: (p: ShortenPayload) => Promise<void>; loading: boolean }
@@ -28,7 +28,7 @@ export default function UrlForm({ onSubmit, loading }: Props) {
           type="url"
           value={url}
           onChange={e => setUrl(e.target.value)}
-          placeholder="Paste your long URL here…"
+          placeholder="Paste your long URL here"
           required
           className="input pl-10 pr-36 h-14 text-base rounded-2xl"
         />
@@ -45,7 +45,7 @@ export default function UrlForm({ onSubmit, loading }: Props) {
           ) : (
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
           )}
-          {loading ? 'Creating…' : 'Shorten'}
+          {loading ? 'Creating' : 'Shorten'}
         </button>
       </div>
 
@@ -65,9 +65,17 @@ export default function UrlForm({ onSubmit, loading }: Props) {
           </div>
           <div>
             <label className="label">Custom alias</label>
-            <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-surface-500 text-sm font-mono">snip/</span>
-              <input type="text" value={alias} onChange={e => setAlias(e.target.value)} placeholder="my-link" className="input pl-12" />
+            <div className="flex items-center rounded-xl border border-surface-700 bg-surface-800/50 overflow-hidden focus-within:border-brand-500 focus-within:ring-1 focus-within:ring-brand-500/30 transition-all duration-150">
+              <span className="px-3 py-3 text-surface-500 text-sm font-mono bg-surface-800 border-r border-surface-700 select-none">
+                snip/
+              </span>
+              <input
+                type="text"
+                value={alias}
+                onChange={e => setAlias(e.target.value)}
+                placeholder="my-link"
+                className="w-full bg-transparent px-3 py-3 text-surface-100 text-sm font-body placeholder:text-surface-500 focus:outline-none"
+              />
             </div>
           </div>
           <div>
@@ -79,3 +87,4 @@ export default function UrlForm({ onSubmit, loading }: Props) {
     </form>
   );
 }
+

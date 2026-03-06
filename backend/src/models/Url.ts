@@ -5,7 +5,9 @@ export interface IUrl extends Document {
   originalUrl: string;
   title?: string;
   clicks: number;
-  owner: Types.ObjectId;
+  isPhishy: boolean;
+  phishyReasons: string[];
+  owner?: Types.ObjectId | null;
   createdAt: Date;
   expiresAt?: Date | null;
 }
@@ -16,7 +18,9 @@ const UrlSchema = new Schema<IUrl>(
     originalUrl: { type: String, required: true },
     title:       { type: String, default: '' },
     clicks:      { type: Number, default: 0 },
-    owner:       { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+    isPhishy:    { type: Boolean, default: false, index: true },
+    phishyReasons: { type: [String], default: [] },
+    owner:       { type: Schema.Types.ObjectId, ref: 'User', default: null, index: true },
     expiresAt:   { type: Date, default: null },
   },
   { timestamps: { createdAt: 'createdAt', updatedAt: false } },

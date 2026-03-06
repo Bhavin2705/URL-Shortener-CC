@@ -1,5 +1,5 @@
-import { useEffect, useState, useCallback } from 'react';
-import { fetchMyLinks, deleteLink, shortenUrl, type ShortenPayload } from '../services/api';
+﻿import { useEffect, useState, useCallback } from 'react';
+import { fetchMyLinks, deleteLink, shortenUrl, updateLink, type ShortenPayload } from '../services/api';
 import type { UrlRecord } from '../types/url';
 import UrlCard from '../components/UrlCard';
 import UrlForm from '../components/UrlForm';
@@ -46,6 +46,19 @@ export default function Dashboard() {
     } catch { show('Failed to delete', 'error'); }
   };
 
+  const handleReroute = async (code: string, currentUrl: string) => {
+    const nextUrl = window.prompt('Enter new destination URL', currentUrl)?.trim();
+    if (!nextUrl || nextUrl === currentUrl) return;
+    try {
+      const updated = await updateLink(code, { originalUrl: nextUrl });
+      setLinks((prev) => prev.map((l) => (l.shortCode === code ? updated : l)));
+      show('Destination updated', 'success');
+    } catch (e: unknown) {
+      const msg = (e as { response?: { data?: { error?: string } } }).response?.data?.error ?? 'Failed to reroute link';
+      show(msg, 'error');
+    }
+  };
+
   const filtered = links.filter(l =>
     l.shortCode.toLowerCase().includes(search.toLowerCase()) ||
     l.originalUrl.toLowerCase().includes(search.toLowerCase()) ||
@@ -60,7 +73,7 @@ export default function Dashboard() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-fade-up">
         <div>
-          <h1 className="font-display font-bold text-3xl text-white">Dashboard</h1>
+          <h1 className="font-display font-bold text-3xl text-surface-100">Dashboard</h1>
           <p className="text-surface-500 text-sm mt-1">
             Welcome back, <span className="text-surface-300 font-semibold">{user?.name}</span>
           </p>
@@ -83,7 +96,7 @@ export default function Dashboard() {
       <div className="grid grid-cols-3 gap-4 animate-fade-up [animation-delay:100ms] opacity-0 [animation-fill-mode:forwards]">
         <div className="stat-box">
           <p className="text-surface-500 text-xs font-display font-semibold uppercase tracking-wider">Total links</p>
-          <p className="font-display font-black text-3xl text-white">{links.length}</p>
+          <p className="font-display font-black text-3xl text-surface-100">{links.length}</p>
         </div>
         <div className="stat-box">
           <p className="text-surface-500 text-xs font-display font-semibold uppercase tracking-wider">Total clicks</p>
@@ -105,7 +118,7 @@ export default function Dashboard() {
             type="text"
             value={search}
             onChange={e => setSearch(e.target.value)}
-            placeholder="Search links…"
+            placeholder="Search links"
             className="input pl-11"
           />
         </div>
@@ -138,7 +151,7 @@ export default function Dashboard() {
         <div className="space-y-3">
           {filtered.map((link, i) => (
             <div key={link._id} className="animate-fade-up opacity-0 [animation-fill-mode:forwards]" style={{ animationDelay: `${i * 50}ms` }}>
-              <UrlCard url={link} onDelete={handleDelete} />
+              <UrlCard url={link} onDelete={handleDelete} onReroute={handleReroute} />
             </div>
           ))}
         </div>
@@ -146,3 +159,4 @@ export default function Dashboard() {
     </div>
   );
 }
+

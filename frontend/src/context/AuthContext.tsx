@@ -8,6 +8,7 @@ interface AuthCtx {
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  refreshMe: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthCtx | null>(null);
@@ -17,6 +18,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Defensive cleanup: ensure legacy token keys are not persisted client-side.
+    localStorage.removeItem('token');
+    localStorage.removeItem('jwt');
+    localStorage.removeItem('snip_token');
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('jwt');
+    sessionStorage.removeItem('snip_token');
     getMe().then(setUser).catch(() => setUser(null)).finally(() => setLoading(false));
   }, []);
 
@@ -35,7 +43,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   };
 
-  return <AuthContext.Provider value={{ user, loading, login, register, logout }}>{children}</AuthContext.Provider>;
+  const refreshMe = async () => {
+    const u = await getMe();
+    setUser(u);
+  };
+
+  return <AuthContext.Provider value={{ user, loading, login, register, logout, refreshMe }}>{children}</AuthContext.Provider>;
 }
 
 export const useAuth = () => {
